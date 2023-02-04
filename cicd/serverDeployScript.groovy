@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
         APP = "module"
-
+        GIT_DISTRIBUTE_URL = "https://github.com/junginwook/multi-module-projects.git"
     }
     stages {
         stage("Preparing Job") {
@@ -27,12 +27,25 @@ pipeline {
                         print(error)
                     }
                 }
+                post {
+                    failure {
+                        echo "Preparing Job stage failed"
+                    }
+                    success {
+                        echo "Preparing Job stage success"
+                    }
+                }
             }
         }
         stage("Cloning Git") {
             steps {
                 script {
-                    print("Cloning Git")
+                    try {
+                        git url: GIT_DISTRIBUTE_URL, branch: GIT_DISTRIBUTE_BRANCH, credentialsId: "GIT_CREDENTIAL"
+                    }
+                    catch (error) {
+                        print(error)
+                    }
                 }
             }
         }
