@@ -78,9 +78,7 @@ pipeline {
         stage("Deploy In Codepipeline") {
             steps {
                 script {
-                    withAws(credentials: "AWS_CREDENTIAL") {
-
-                    }
+                    
                 }
             }
         }
