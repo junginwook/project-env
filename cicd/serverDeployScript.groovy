@@ -6,7 +6,6 @@ pipeline {
         gradle "Gradle 7.6"
     }
     environment {
-        APP = "module"
         GIT_DISTRIBUTE_URL = "https://github.com/junginwook/multi-module-projects.git"
     }
     stages {
@@ -16,7 +15,6 @@ pipeline {
                     try {
                         GIT_DISTRIBUTE_BRANCH_MAP = ["dev" : "develop", "qa" : "release", "prod" : "production"]
 
-                        env.SERVICE_NAME = "${APP}-${SERVICE}"
                         env.GIT_DISTRIBUTE_BRANCH = GIT_DISTRIBUTE_BRANCH_MAP[STAGE]
 
                         print("Deploy stage is ${STAGE}")
@@ -41,7 +39,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        git url: GIT_DISTRIBUTE_URL, branch: GIT_DISTRIBUTE_BRANCH, credentialsId: "lucky"
+                        git url: GIT_DISTRIBUTE_URL, branch: GIT_DISTRIBUTE_BRANCH, credentialsId: "GIT_CREDENTIAL"
                     }
                     catch (error) {
                         print(error)
@@ -61,7 +59,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh("gradle clean ${env.SERVICE_NAME}:build -x test")
+                        sh("gradle clean ${SERVICE}:build -x test")
                     }
                     catch (error) {
                         print(error)
@@ -77,10 +75,19 @@ pipeline {
                 }
             }
         }
-        stage("Building Image") {
+        stage("Deploy In Codepipeline") {
             steps {
                 script {
-                    print("Building Image")
+                    withAws(credentials: "AWS_CREDENTIAL") {
+
+                    }
+                }
+            }
+        }
+        stage("Clean Up") {
+            steps {
+                script {
+                    print("clean up")
                 }
             }
         }
