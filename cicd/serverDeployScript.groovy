@@ -10,16 +10,27 @@ pipeline {
     }
     stages {
         stage("Preparing Job") {
+            steps {
 
+            }
+            post {
+
+            }
         }
         stage("Cloning Git") {
-
+            steps {
+                
+            }
         }
         stage("Building Jar") {
+            steps {
 
+            }
         }
         stage("Building Image") {
+            steps {
 
+            }
         }
     }
 }
