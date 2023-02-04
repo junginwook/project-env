@@ -1,6 +1,6 @@
 
 pipeline {
-    angent any
+    agent any
 
     tools {
         gradle "Gradle 7.4.2"
