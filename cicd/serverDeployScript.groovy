@@ -5,31 +5,33 @@ pipeline {
     tools {
         gradle "Gradle 8.0-rc-2"
     }
-    environment {
-
-    }
     stages {
         stage("Preparing Job") {
             steps {
-
-            }
-            post {
-
+                script {
+                    print("Preparing Job")
+                }
             }
         }
         stage("Cloning Git") {
             steps {
-                
+                script {
+                    print("Cloning Git")
+                }
             }
         }
         stage("Building Jar") {
             steps {
-
+                script {
+                    print("Building Jar")
+                }
             }
         }
         stage("Building Image") {
             steps {
-
+                script {
+                    print("Building Image")
+                }
             }
         }
     }
