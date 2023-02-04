@@ -41,7 +41,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        git url: GIT_DISTRIBUTE_URL, branch: GIT_DISTRIBUTE_BRANCH, credentialsId: "GIT_CREDENTIAL"
+                        git url: GIT_DISTRIBUTE_URL, branch: GIT_DISTRIBUTE_BRANCH
                     }
                     catch (error) {
                         print(error)
