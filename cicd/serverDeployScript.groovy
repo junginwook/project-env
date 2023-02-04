@@ -48,11 +48,32 @@ pipeline {
                     }
                 }
             }
+            post {
+                failure {
+                    echo "Git clone stage failed"
+                }
+                success {
+                    echo "Git clone stage success"
+                }
+            }
         }
         stage("Building Jar") {
             steps {
                 script {
-                    print("Building Jar")
+                    try {
+                        sh("gradle clean ${env.SERVICE_NAME}:build -x test")
+                    }
+                    catch (error) {
+                        print(error)
+                    }
+                }
+            }
+            post {
+                failure {
+                    echo "Build jar stage failed"
+                }
+                success {
+                    echo "Build jar stage success"
                 }
             }
         }
