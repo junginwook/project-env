@@ -78,7 +78,7 @@ pipeline {
         stage("Deploy In Codepipeline") {
             steps {
                 script {
-                    
+                    print("Deploy In Codepipeline")
                 }
             }
         }
