@@ -89,9 +89,18 @@ pipeline {
             steps {
                 script {
                     try {
-                        withAWS(credentials: "AWS_CREDENTIAL") {
-                            s3Upload(path: "aaa/bbb/ccc.zip")
-                        }
+
+                        sh("cd deploy")
+
+                        sh("cat>deploy.sh <<-EOF")
+                        sh("#!/bin/bash")
+                        sh("BUILD_PATH=\$(ls /home/ec2-user/build/*.jar)\n")
+                        sh("JAR_NAME=\$(basename $BUILD_PATH)\n")
+                        sh("EOF")
+
+//                        withAWS(credentials: "AWS_CREDENTIAL") {
+//                            s3Upload(path: "aaa/bbb/ccc.zip")
+//                        }
                     }
                     catch (error) {
                         print(error)
