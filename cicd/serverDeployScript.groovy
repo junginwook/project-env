@@ -67,7 +67,7 @@ pipeline {
                         sh("gradle clean ${SERVICE}:build -x test")
 
                         sh("cd deploy")
-                        sh("cp /var/lib/jenkins/workspace/${env.JOB_NAME}/${SERVICE}/build/libs/*.jar ./${SERVICE}.jar")
+                        sh("cp /var/lib/jenkins/workspace/${env.JOB_NAME}/${SERVICE}/build/libs/*.jar ./deploy/${SERVICE}.jar")
                     }
                     catch (error) {
                         print(error)
