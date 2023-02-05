@@ -136,8 +136,50 @@ pipeline {
                     }
                     catch (error) {
                         print(error)
+                        sh("sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*")
                         currentBuild.result = "FAILURE"
                     }
+                }
+            }
+            post {
+                failure {
+                    echo "Upload S3 stage failed"
+                }
+                success {
+                    echo "Upload S3 stage success"
+                }
+            }
+        }
+        stage("Deploy") {
+            steps {
+                script {
+                    try {
+                        withAWS(credentials: "AWS_CREDENTIAL") {
+                            sh """
+                                aws deploy create-deployment \
+                                --application-name inwook-deploy \
+                                --deployment-group-name inwook-deploy-group \
+                                --region ap-northeast-2 \
+                                --s3-location bucket=inwook-beanstalk-deploy, bundleType=zip, key=${env.JOB_NAME}/${env.BUILD_NUMBER}/${env.JOB_NAME}.zip \
+                                --file-exist-behavior OVERWRITE \
+                                --output json > DEPLOYMENT_ID.json
+                                cat DEPLOYMENT_ID.json
+                            """
+                        }
+                    }
+                    catch (error) {
+                        print(error)
+                        sh("sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*")
+                        currentBuild.result = "FAILURE"
+                    }
+                }
+            }
+            post {
+                failure {
+                    echo "Deploy stage failed"
+                }
+                success {
+                    echo "Deploy stage success"
                 }
             }
         }
