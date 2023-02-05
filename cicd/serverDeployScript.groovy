@@ -88,8 +88,14 @@ pipeline {
         stage("Upload To S3") {
             steps {
                 script {
-                    withAWS(credentials: "AWS_CREDENTIAL") {
-                        s3Upload(path: "aaa/bbb/ccc.zip")
+                    try {
+                        withAWS(credentials: "AWS_CREDENTIAL") {
+                            s3Upload(path: "aaa/bbb/ccc.zip")
+                        }
+                    }
+                    catch (error) {
+                        print(error)
+                        currentBuild.result = "FAILURE"
                     }
                 }
             }
@@ -97,7 +103,13 @@ pipeline {
         stage("Clean Up") {
             steps {
                 script {
-                    print("clean up")
+                    try {
+
+                    }
+                    catch (error) {
+                        print(error)
+                        currentBuild.result = "FAILURE"
+                    }
                 }
             }
         }
