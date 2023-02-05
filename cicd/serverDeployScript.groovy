@@ -93,32 +93,32 @@ pipeline {
                         sh """
                         cd deploy
                         cat > deploy.sh <<-EOF
-                        #!/bin/bash
-                        kill -9 dollar(ps -ef | grep ${env.JOB_NAME}.jar | grep -v grep | awk '{print dollar2}')
-                        nohup java -jar /home/ec2-user/deploy/${env.JOB_NAME}.jar 1> /dev/null 2>&1 &
-                        EOF"""
+#!/bin/bash
+kill -9 dollar(ps -ef | grep ${env.JOB_NAME}.jar | grep -v grep | awk '{print dollar2}')
+nohup java -jar /home/ec2-user/deploy/${env.JOB_NAME}.jar 1> /dev/null 2>&1 &
+"""
 
                         sh """
                         cd deploy
                         cat>appspec.yml<<-EOF
-                        version: 0.0
-                        os: linux
-                        files:
-                          - source:  /
-                            destination: /home/ec2-user/deploy
-                        
-                        permissions:
-                          - object: /
-                            pattern: "**"
-                            owner: jenkins
-                            group: jenkins
-                        
-                        hooks:
-                          ApplicationStart:
-                            - location: deploy.sh
-                              timeout: 60
-                              runas: root
-                        EOF"""
+version: 0.0
+os: linux
+files:
+  - source:  /
+    destination: /home/ec2-user/deploy
+
+permissions:
+  - object: /
+    pattern: "**"
+    owner: jenkins
+    group: jenkins
+
+hooks:
+  ApplicationStart:
+    - location: deploy.sh
+      timeout: 60
+      runas: root
+"""
 
                         sh """
                         cd deploy
@@ -165,6 +165,23 @@ pipeline {
                                 --output json > DEPLOYMENT_ID.json
                                 cat DEPLOYMENT_ID.json
                             """
+
+                            def DEPLOYMENT_ID = readJSON file: './DEPLOYMENT_ID.json'
+                            echo"${DEPLOYMENT_ID.deploymentId}"
+                            sh("rm -rf ./DEPLOYMENT_ID.json")
+
+                            def DEPLOYMENT_RESULT = ""
+                            while("$DEPLOYMENT_RESULT" != "\"Succeeded\"") {
+                                DEPLOYMENT_RESULT = withAWS(credentials: "AWS_CREDENTIAL") {
+                                    sh("aws deploy get-deployment --query \"deploymentInfo.status\" --region ap-northeast-2 --deployment-id ${DEPLOYMENT_ID.deploymentId}").trim()
+                                }
+                                echo "$DEPLOYMENT_RESULT"
+                                if ("$DEPLOYMENT_RESULT" == "\"Failed\"") {
+                                    throw new Exception("CodeDeploy Failed")
+                                    break
+                                }
+                                sleep(30)
+                            }
                         }
                     }
                     catch (error) {
