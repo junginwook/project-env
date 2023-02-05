@@ -161,7 +161,7 @@ pipeline {
                                 --deployment-group-name inwook-deploy-group \
                                 --region ap-northeast-2 \
                                 --s3-location bucket=inwook-beanstalk-deploy, bundleType=zip, key=${env.JOB_NAME}/${env.BUILD_NUMBER}/${env.JOB_NAME}.zip \
-                                --file-exist-behavior OVERWRITE \
+                                --file-exists-behavior OVERWRITE \
                                 --output json > DEPLOYMENT_ID.json
                                 cat DEPLOYMENT_ID.json
                             """
@@ -170,7 +170,7 @@ pipeline {
                     catch (error) {
                         print(error)
                         sh("sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*")
-//                        currentBuild.result = "FAILURE"
+                        currentBuild.result = "FAILURE"
                     }
                 }
             }
