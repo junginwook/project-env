@@ -120,10 +120,19 @@ pipeline {
                               runas: root
                         EOF"""
 
+                        sh """
+                        cd deploy
+                        zip -r deploy *
+                        """
 
-//                        withAWS(credentials: "AWS_CREDENTIAL") {
-//                            s3Upload(path: "aaa/bbb/ccc.zip")
-//                        }
+
+                        withAWS(credentials: "AWS_CREDENTIAL") {
+                            s3Upload(
+                                    path: "${env.JOB_NAME}/${env.BUILD_NUMBER}/${env.JOB_NAME}.zip",
+                                    file: "/var/lib/jenkins/workspace/${env.JOB_NAME}/deploy/deploy.zip",
+                                    bucket: "inwook-beanstalk-deploy"
+                            )
+                        }
                     }
                     catch (error) {
                         print(error)
