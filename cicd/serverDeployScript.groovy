@@ -92,11 +92,11 @@ pipeline {
 
                         sh("cd deploy")
 
-                        sh("cat>deploy.sh <<-EOF")
-                        sh("#!/bin/bash")
-                        sh("BUILD_PATH=\$(ls /home/ec2-user/build/*.jar)\n")
-                        sh("JAR_NAME=\$(basename $BUILD_PATH)\n")
-                        sh("EOF")
+                        sh("cat>deploy.sh <<-EOF " +
+                                "\"#!/bin/bash\" " +
+                                "BUILD_PATH=\$(ls /home/ec2-user/build/*.jar)\n " +
+                                "JAR_NAME=\$(basename $BUILD_PATH)\n " +
+                                "EOF")
 
 //                        withAWS(credentials: "AWS_CREDENTIAL") {
 //                            s3Upload(path: "aaa/bbb/ccc.zip")
