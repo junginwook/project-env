@@ -93,10 +93,33 @@ pipeline {
                         sh """
                         cd deploy
                         cat > deploy.sh <<-EOF
-#!/bin/bash
-kill -9 dollar(ps -ef | grep ${env.JOB_NAME}.jar | grep -v grep | awk '{print dollar2}')
-nohup java -jar /home/jenkins/deploy/${env.JOB_NAME}.jar 1> /dev/null 2>&1 &
-EOF"""
+                        #!/bin/bash
+                        kill -9 dollar(ps -ef | grep ${env.JOB_NAME}.jar | grep -v grep | awk '{print dollar2}')
+                        nohup java -jar /home/ec2-user/deploy/${env.JOB_NAME}.jar 1> /dev/null 2>&1 &
+                        EOF"""
+
+                        sh """
+                        cd deploy
+                        cat>appspec.yml<<-EOF
+                        version: 0.0
+                        os: linux
+                        files:
+                          - source:  /
+                            destination: /home/ec2-user/deploy
+                        
+                        permissions:
+                          - object: /
+                            pattern: "**"
+                            owner: jenkins
+                            group: jenkins
+                        
+                        hooks:
+                          ApplicationStart:
+                            - location: deploy.sh
+                              timeout: 60
+                              runas: root
+                        EOF"""
+
 
 //                        withAWS(credentials: "AWS_CREDENTIAL") {
 //                            s3Upload(path: "aaa/bbb/ccc.zip")
