@@ -18,7 +18,7 @@ pipeline {
                         env.GIT_DISTRIBUTE_BRANCH = GIT_DISTRIBUTE_BRANCH_MAP[STAGE]
 
                         print("Deploy stage is ${STAGE}")
-                        print("Deploy service is ${env.SERVICE_NAME}")
+                        print("Deploy service is ${SERVICE}")
                         print("Deploy git branch is ${env.GIT_DISTRIBUTE_BRANCH}")
                     }
                     catch (error) {
@@ -67,7 +67,7 @@ pipeline {
                         sh("gradle clean ${SERVICE}:build -x test")
 
                         sh("cd deploy")
-                        sh("cp /var/lib/jenkins/workspace/${env.JOB_NAME}/${env.SERVICE_NAME}/build/libs/*.jar ./${env.SERVICE_NAME}.jar")
+                        sh("cp /var/lib/jenkins/workspace/${env.JOB_NAME}/${SERVICE}/build/libs/*.jar ./${env.SERVICE_NAME}.jar")
                     }
                     catch (error) {
                         print(error)
