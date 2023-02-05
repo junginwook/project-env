@@ -165,23 +165,23 @@ hooks:
                                 --output json > DEPLOYMENT_ID.json
                                 cat DEPLOYMENT_ID.json
                             """
+                        }
 
-                            def DEPLOYMENT_ID = readJSON file: './DEPLOYMENT_ID.json'
-                            echo"${DEPLOYMENT_ID.deploymentId}"
-                            sh("rm -rf ./DEPLOYMENT_ID.json")
+                        def DEPLOYMENT_ID = readJSON file: './DEPLOYMENT_ID.json'
+                        echo"${DEPLOYMENT_ID.deploymentId}"
+                        sh("rm -rf ./DEPLOYMENT_ID.json")
 
-                            def DEPLOYMENT_RESULT = ""
-                            while("$DEPLOYMENT_RESULT" != "\"Succeeded\"") {
-                                DEPLOYMENT_RESULT = withAWS(credentials: "AWS_CREDENTIAL") {
-                                    sh("aws deploy get-deployment --query \"deploymentInfo.status\" --region ap-northeast-2 --deployment-id ${DEPLOYMENT_ID.deploymentId}").trim()
-                                }
-                                echo "$DEPLOYMENT_RESULT"
-                                if ("$DEPLOYMENT_RESULT" == "\"Failed\"") {
-                                    throw new Exception("CodeDeploy Failed")
-                                    break
-                                }
-                                sleep(30)
+                        def DEPLOYMENT_RESULT = ""
+                        while("$DEPLOYMENT_RESULT" != "\"Succeeded\"") {
+                            DEPLOYMENT_RESULT = withAWS(credentials: "AWS_CREDENTIAL") {
+                                sh("aws deploy get-deployment --query \"deploymentInfo.status\" --region ap-northeast-2 --deployment-id ${DEPLOYMENT_ID.deploymentId}").trim()
                             }
+                            echo "$DEPLOYMENT_RESULT"
+                            if ("$DEPLOYMENT_RESULT" == "\"Failed\"") {
+                                throw new Exception("CodeDeploy Failed")
+                                break
+                            }
+                            sleep(30)
                         }
                     }
                     catch (error) {
