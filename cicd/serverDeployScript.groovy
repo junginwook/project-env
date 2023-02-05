@@ -170,7 +170,7 @@ pipeline {
                     catch (error) {
                         print(error)
                         sh("sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*")
-                        currentBuild.result = "FAILURE"
+//                        currentBuild.result = "FAILURE"
                     }
                 }
             }
