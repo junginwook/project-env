@@ -59,7 +59,13 @@ pipeline {
             steps {
                 script {
                     try {
+                        sh("rm -rf deploy")
+                        sh("mkdir deploy")
+
                         sh("gradle clean ${SERVICE}:build -x test")
+
+                        sh("cd deploy")
+                        sh("cp /var/lib/jenkins/workspace/${env.JOB_NAME}/${env.SERVICE_NAME}/build/libs/*.jar ./${env.SERVICE_NAME}.jar")
                     }
                     catch (error) {
                         print(error)
@@ -79,7 +85,7 @@ pipeline {
             steps {
                 script {
                     withAWS(credentials: "AWS_CREDENTIAL") {
-
+                        s3Upload(path: "aaa/bbb/ccc.zip")
                     }
                 }
             }
