@@ -75,10 +75,12 @@ pipeline {
                 }
             }
         }
-        stage("Deploy In Codepipeline") {
+        stage("Upload To S3") {
             steps {
                 script {
-                    print("Deploy In Codepipeline")
+                    withAWS(credentials: "AWS_CREDENTIAL") {
+
+                    }
                 }
             }
         }
