@@ -171,18 +171,7 @@ hooks:
                         echo"${DEPLOYMENT_ID.deploymentId}"
                         sh("rm -rf ./DEPLOYMENT_ID.json")
 
-                        def DEPLOYMENT_RESULT = ""
-                        while("$DEPLOYMENT_RESULT" != "\"Succeeded\"") {
-                            withAWS(credentials: "AWS_CREDENTIAL") {
-                                DEPLOYMENT_RESULT = sh("aws deploy get-deployment --query \"deploymentInfo.status\" --region ap-northeast-2 --deployment-id ${DEPLOYMENT_ID.deploymentId}")
-                            }
-                            echo "$DEPLOYMENT_RESULT"
-                            if ("$DEPLOYMENT_RESULT" == "\"Failed\"") {
-                                throw new Exception("CodeDeploy Failed")
-                                break
-                            }
-                            sleep(30)
-                        }
+                        awaitDeploymentCompletion("${DEPLOYMENT_ID.deploymentId}")
                     }
                     catch (error) {
                         print(error)
