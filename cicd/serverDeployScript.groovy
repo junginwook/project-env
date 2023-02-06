@@ -173,10 +173,10 @@ hooks:
 
                         def DEPLOYMENT_RESULT = ""
                         while("$DEPLOYMENT_RESULT" != "\"Succeeded\"") {
-                            DEPLOYMENT_RESULT = withAWS(credentials: "AWS_CREDENTIAL") {
-                                sh("aws deploy get-deployment --query \"deploymentInfo.status\" --region ap-northeast-2 --deployment-id ${DEPLOYMENT_ID.deploymentId}")
+                            withAWS(credentials: "AWS_CREDENTIAL") {
+                                DEPLOYMENT_RESULT = sh("aws deploy get-deployment --query \"deploymentInfo.status\" --region ap-northeast-2 --deployment-id ${DEPLOYMENT_ID.deploymentId}")
                             }
-                            echo DEPLOYMENT_RESULT
+                            echo "$DEPLOYMENT_RESULT"
                             if ("$DEPLOYMENT_RESULT" == "\"Failed\"") {
                                 throw new Exception("CodeDeploy Failed")
                                 break
