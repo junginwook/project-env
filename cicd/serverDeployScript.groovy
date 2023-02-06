@@ -110,8 +110,8 @@ files:
 permissions:
   - object: /
     pattern: "**"
-    owner: jenkins
-    group: jenkins
+    owner: ec2-user
+    group: ec2-user
 
 hooks:
   ApplicationStart:
