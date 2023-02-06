@@ -94,9 +94,9 @@ pipeline {
                         cd deploy
                         cat > deploy.sh <<-EOF
                         #!/bin/bash
-                        BUILD_PATH=$(ls /home/ec2-user/deploy/*.jar)
-                        JAR_NAME=$(basename $BUILD_PATH)
-                        echo "> build 파일명: $JAR_NAME"
+                        BUILD_PATH=\$(ls /home/ec2-user/deploy/*.jar)
+                        JAR_NAME=\$(basename $BUILD_PATH)
+                        echo "> build 파일명: \$JAR_NAME"
                         
                         echo "> build 파일 복사"
                         DEPLOY_PATH=/home/ec2-user/
