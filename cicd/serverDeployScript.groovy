@@ -103,7 +103,7 @@ pipeline {
                         kill -9 `pgrep -f ${SERVICE}.jar`
                         nohup java -jar /home/ec2-user/deploy/${SERVICE}.jar 1> /dev/null 2>&1 &
                         """.stripIndent()
-                        writeFile(file: 'deploy.sh', text: script)
+                        writeFile(file: 'deploy/deploy.sh', text: script)
 
                         sh """
                         cd deploy
