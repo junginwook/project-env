@@ -90,13 +90,20 @@ pipeline {
                 script {
                     try {
 
-                        sh '''
-                        cd deploy
-                        cat > deploy.sh <<- _EOF_
+//                        sh '''
+//                        cd deploy
+//                        cat > deploy.sh <<- _EOF_
+//                        #!/bin/bash
+//                        kill -9 `pgrep -f ${SERVICE}.jar`
+//                        nohup java -jar /home/ec2-user/deploy/${SERVICE}.jar 1> /dev/null 2>&1 &
+//                        _EOF_'''.stripIndent()
+                        
+                        def script = """
                         #!/bin/bash
                         kill -9 `pgrep -f ${SERVICE}.jar`
                         nohup java -jar /home/ec2-user/deploy/${SERVICE}.jar 1> /dev/null 2>&1 &
-                        _EOF_'''.stripIndent()
+                        """.stripIndent()
+                        writeFile(file: 'deploy.txt', text: script)
 
                         sh """
                         cd deploy
