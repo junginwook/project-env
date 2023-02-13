@@ -95,10 +95,10 @@ pipeline {
                         #!/bin/bash
                         kill -9 `pgrep -f ${SERVICE}.jar`
                         nohup java -jar \\
-                        -javaagent:./pinpoint-agent-2.2.2/pinpoint-bootstrap-2.2.2.jar \\
+                        -javaagent:/home/ec2-user/pinpoint-agent-2.2.2/pinpoint-bootstrap-2.2.2.jar \\
                         -Dpinpoint.agentId=gjgs01 \\
                         -Dpinpoint.applicationName=gjgs \\
-                        -Dpinpoint.config=./pinpoint-agent-2.2.2/pinpoint-root.config \\ 
+                        -Dpinpoint.config=/home/ec2-user/pinpoint-agent-2.2.2/pinpoint-root.config \\ 
                         -Dspring.profiles.active=dev \\
                         /home/ec2-user/deploy/module-api-service.jar \\
                         1> /dev/null 2>&1 &
