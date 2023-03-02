@@ -4,6 +4,7 @@ pipeline {
 
     tools {
         gradle "Gradle 7.6"
+        jdk "jdk17"
     }
     environment {
         GIT_DISTRIBUTE_URL = "https://github.com/junginwook/multi-module-projects.git"
@@ -12,9 +13,7 @@ pipeline {
         stage("Preparing Job") {
             steps {
                 script {
-                    withJava(jdk: 'jdk17') {
-                        sh 'java -version'
-                    }
+
                     try {
                         GIT_DISTRIBUTE_BRANCH_MAP = ["dev" : "develop", "qa" : "release", "prod" : "main"]
 
