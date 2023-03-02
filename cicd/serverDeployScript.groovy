@@ -12,6 +12,7 @@ pipeline {
         stage("Preparing Job") {
             steps {
                 script {
+                    sh("java -version")
                     try {
                         GIT_DISTRIBUTE_BRANCH_MAP = ["dev" : "develop", "qa" : "release", "prod" : "main"]
 
